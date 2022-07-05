@@ -1,0 +1,95 @@
+﻿<Page x:Class="ExamTaskApp.UI.Pages.OrderList"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ExamTaskApp.UI.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Список заказов">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Content="Изменить статус"
+                    x:Name="btnChangeStatus" Click="btnChangeStatus_Click"/>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <CheckBox Content="По убыванию" VerticalAlignment="Center"
+                          x:Name="checkDecreasing" Checked="checkDecreasing_Checked" Unchecked="checkDecreasing_Unchecked"/>
+                <ComboBox Width="175"
+                          x:Name="sortBox" SelectionChanged="sortBox_SelectionChanged">
+                    <ComboBoxItem Content="Нет"/>
+                    <ComboBoxItem Content="Стоимость"/>
+                </ComboBox>
+            </StackPanel>
+
+            <ComboBox Grid.Column="2" Width="175"
+                          x:Name="filtBox" SelectionChanged="filtBox_SelectionChanged">
+                <ComboBoxItem Content="Все диапозоны"/>
+                <ComboBoxItem Content="0-10%"/>
+                <ComboBoxItem Content="11-14%"/>
+                <ComboBoxItem Content="15% и более"/>
+            </ComboBox>
+
+            <Button Content="Сбросить" Grid.Column="3" Width="75"
+                    x:Name="btnThrowOff" Click="btnThrowOff_Click"/>
+        </Grid>
+
+        <ListView Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  x:Name="orderView">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <Border BorderBrush="{StaticResource backgroundAttention}" 
+                                        BorderThickness="2" Margin="5" Background="#ff8c00"
+                                        x:Name="orderCard">
+                                    <StackPanel Width="250">
+                                        <TextBlock Text="{Binding OrderId, StringFormat=Номер заказа: {0}}" FontSize="16" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding OrderStructure, StringFormat=Состав: {0}}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding OrderCreateDate, StringFormat=Дата заказа: {0:d}}"/>
+                                        <TextBlock Text="{Binding OrderDeliveryDate, StringFormat=Дата доставки: {0:d}}"/>
+                                        <TextBlock Text="{Binding OrderAllSum, StringFormat=Общая сумма: {0}}"/>
+                                        <TextBlock Text="{Binding OrderAllDiscount, StringFormat=Общая скидка: {0}%}"/>
+                                        <TextBlock Text="{Binding OrderUserName, StringFormat=Клиент: {0}, TargetNullValue=Клиент: Гость}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding OrderStatus.Name, StringFormat=Статус: {0}}"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <ControlTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding StockAvailability}" Value="True">
+                                        <Setter TargetName="orderCard" Property="Background" Value=" #20b2aa"/>
+                                    </DataTrigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="orderCard" Property="Background" Value="#FF17C1E2"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="orderCard" Property="Background" Value="#FF006DFF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+    </Grid>
+</Page>
